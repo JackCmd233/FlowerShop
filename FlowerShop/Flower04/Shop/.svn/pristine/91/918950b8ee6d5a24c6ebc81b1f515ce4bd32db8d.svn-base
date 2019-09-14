@@ -1,0 +1,92 @@
+package com.controller.before;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.alipay.api.AlipayApiException;
+import com.po.pojo.AlipayBean;
+import com.util.AlipayConfig;
+
+@Controller
+@RequestMapping("/pay")
+public class PayController{
+	@RequestMapping("/alipay")
+	public void testPay(String orderId,String amount){
+		System.out.println("aaa");
+		System.out.println(orderId);
+	}
+}
+//        System.out.println(value);
+//        if (value!=null) {
+//            try {
+//                response.setContentType("text/html; charset=utf-8");
+//
+//                response.getWriter().write(alipayService.getwayPay(value));
+//                response.getWriter().close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        
+//	public String alipay(String orderId,String amount) throws AlipayApiException {
+//		AlipayBean alipayBean=new AlipayBean();
+//		alipayBean.setOrderId(orderId);
+//		alipayBean.setOrderName(orderId);
+//		alipayBean.setAmount(amount);
+//		System.out.println("cao");
+//		AlipayConfig alipayConfig=new AlipayConfig();
+//		return alipayConfig.pay(alipayBean);	
+//	}
+
+//	@RequestMapping(value = "/alipay",method=RequestMethod.POST)
+//	public ModelAndView alipay(String orderId,String amount) {
+//	AlipayBean alipayBean=new AlipayBean();
+//	alipayBean.setOrderId(orderId);
+//	alipayBean.setOrderName(orderId);
+//	alipayBean.setAmount(amount);
+//	AlipayConfig alipayConfig=new AlipayConfig();
+//	try {
+//		ModelAndView a=alipayConfig.pay(alipayBean);
+//	} catch (AlipayApiException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//	return a;
+//}
+//	@ResponseBody
+//	public ModelAndView alipay(@RequestBody AlipayBean alipayBean) {
+//		alipayBean.setOrderName(alipayBean.getOrderId());
+//		AlipayConfig alipayConfig=new AlipayConfig();
+//		System.out.println(alipayBean.getAmount());
+//		System.out.println(alipayBean.getOrderId());
+//		try {
+//			ModelAndView a=alipayConfig.pay(alipayBean);
+//		} catch (AlipayApiException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return alipayBean;
+//	}
+//	public void alipay(String orderId,String amount) {
+//		AlipayBean alipayBean=new AlipayBean();
+//		alipayBean.setOrderId(orderId);
+//		alipayBean.setOrderName(orderId);
+//		alipayBean.setAmount(amount);
+//		AlipayConfig alipayConfig=new AlipayConfig();
+//		try {
+//			alipayConfig.pay(alipayBean);
+//		} catch (AlipayApiException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
+

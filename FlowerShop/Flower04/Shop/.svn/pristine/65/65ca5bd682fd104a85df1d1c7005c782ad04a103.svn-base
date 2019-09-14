@@ -1,0 +1,17 @@
+package com.service.admin;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.ui.Model;
+
+import com.po.Goods;
+
+public interface AdminGoodsService {
+	public String selectGoods(Model model, Integer pageCur, String act);//查询所有商品
+	public String selectAGoods(Model model, Integer id, String act);//查询一个商品信息
+	public String addOrUpdateGoods(Goods goods,HttpServletRequest request,Model model,String updateAct);//添加或修改商品信息
+	public String deleteAGoods(Integer id,Model model);//删除一个商品
+	public String deleteGoods(Integer ids[],Model model);//删除多个商品
+	public Goods selectAGoods1(Model model, Integer id);//查询一个商品信息
+}

@@ -1,0 +1,103 @@
+package com.controller.before;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+
+import com.service.before.IndexService;
+@Controller
+public class IndexController {
+	@Autowired
+	private IndexService indexService;
+
+	
+	@RequestMapping("/toRegister")//杩斿洖娉ㄥ唽鐨勯〉闈�
+	public String toRegister(Model model) {
+		return indexService.toRegister(model);
+	}
+	@RequestMapping("/toLogin")//杩斿洖鐧诲綍鐨勯〉闈�
+	public String toLogin(Model model) {
+		return indexService.toLogin(model);
+	}
+
+//	@RequestMapping("/cart/selectCart")//璐墿杞︾偣鍑昏烦杞〉闈�
+//	public String cart(Model model) {
+//		return "cart";
+//	}
+	
+	@RequestMapping("/goodsDetail")//杩斿洖鑺辩殑璇︽儏鐨勯〉闈�
+	public String goodsDetail(Model model,Integer id) {
+		return indexService.goodsDetail(model, id);
+	}
+	
+	//褰撶偣鍑诲叕鍛婃爮涓婄殑鍏憡鐨勬椂鍊欎細鍚戝墠绔繑鍥炵浉搴旂殑鏁版嵁
+	@RequestMapping(value="/selectANotice/{id}",method=RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> selectANotice(Model model,@PathVariable Integer id) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("notice",indexService.selectANotice(model, id));
+		return map;
+	}
+	
+	//涓婚〉闈㈣姹�
+	@RequestMapping("/index2")
+	public String index2(Model model) {
+		return indexService.index2(model);
+	}
+	
+	//鏌ヨ椤甸潰
+	@RequestMapping("/search2/{currentIndex}")
+	public String search2(Model model,@PathVariable int currentIndex) {
+		return indexService.search2(model, currentIndex);
+	}
+	//鏍规嵁鎼滅储妗嗕腑鐨勪俊鎭煡璇㈢浉鍏充俊鎭�
+	@RequestMapping(value= "/search/{mykey}",method=RequestMethod.GET)
+	public String search(Model model,@PathVariable String mykey) {
+		return indexService.search(model, mykey);
+	}
+	//鐑攢鍟嗗搧鏇村鏁版嵁
+	@RequestMapping("/search/more/hot/{currentIndex}")
+	public String search_type(Model model,@PathVariable int currentIndex) {
+		return indexService.getInfobyhot(model,currentIndex);
+	}
+	//浜烘皵鍟嗗搧鏇村鏁版嵁
+	@RequestMapping("search/more/popularity/{currentIndex}")
+	public String search_popularity(Model model,@PathVariable int currentIndex) {
+		return indexService.getInfobypopularity(model,currentIndex);
+	}
+
+	//鎼滅储椤甸潰锛屾牴鎹墠绔紶閫掔粰鍚庣鐨勬潯浠舵暟鎹繘琛屾煡璇㈣繑鍥�
+	@RequestMapping(value="/selectInfo/{search_type}/{search_sale}/{search_method}/{currentIndex}",method=RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> selectInfo(Model model,@PathVariable Integer search_type,@PathVariable String search_sale,@PathVariable String search_method,@PathVariable int currentIndex) {
+		return indexService.selectInfo(model, search_type, search_sale, search_method,currentIndex);
+	
+	}
+	//鐢ㄦ埛涓績
+	@RequestMapping("/useC")
+	public String userCenter() {
+		return "redirect:/userCenter";
+	}
+	//点击支付之后创建的订单页面
+	@RequestMapping("/orderD")
+	public String orderDetail() {
+		
+		return "before/orderDetail";
+	}
+	//获取当前用户的相关地址
+	@RequestMapping("/getAddressInfo")
+	@ResponseBody
+	public Map<String, Object> getAddress(HttpServletRequest request) {
+		return indexService.getAddress(request);
+	}
+	
+}

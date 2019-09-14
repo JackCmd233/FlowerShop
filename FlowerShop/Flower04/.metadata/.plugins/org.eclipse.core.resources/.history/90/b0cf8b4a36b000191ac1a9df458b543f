@@ -1,0 +1,27 @@
+package com.controller.before;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.service.before.CartService;
+
+@Controller
+public class PayController extends BaseBeforeController{
+	@Autowired
+	private CartService cartService;
+	
+	/**
+	 * 跳转到支付页面
+	 */
+	@RequestMapping("/toPay")
+	public String toPay(Model model,HttpSession session,HttpServletRequest request,Integer id) {
+		System.out.println("这是地址ID: "+id);
+		cartService.toPay(model, request, session, id);
+		return "before/pay";
+	}
+}

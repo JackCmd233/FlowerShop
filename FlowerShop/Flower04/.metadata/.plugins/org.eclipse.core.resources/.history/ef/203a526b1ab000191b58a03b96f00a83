@@ -1,0 +1,25 @@
+package com.controller.before;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class PayController extends BaseBeforeController{
+	
+	/**
+	 * 跳转到支付页面
+	 * @param model
+	 * @param session
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/toPay")
+	public String toPay(Model model,HttpSession session,HttpServletRequest request) {
+		
+		return "index2";
+	}
+}

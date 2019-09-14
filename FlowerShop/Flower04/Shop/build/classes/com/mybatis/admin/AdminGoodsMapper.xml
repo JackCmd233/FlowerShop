@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.AdminGoodsDao">
+	<!-- 查询商品 -->
+	<select id="selectGoods" resultType="Goods">
+		select gt.*,gd.*,gy.typename from goodstable gt,goodsdiscount gd,goodstype gy
+		where gt.id=gd.goodstable_id and gt.goodstype_tid=gy.tid and gd.gdnow=1  
+		order by gt.gstore ASC 
+	</select>
+	<!-- 分页查询商品 --> 
+	<select id="selectAllGoodsByPage" resultType="Goods" parameterType="map">
+		select gt.*,gd.*,gy.typename from goodstable gt,goodsdiscount gd,goodstype gy 
+		where gt.id=gd.goodstable_id and gt.goodstype_tid=gy.tid and gd.gdnow=1
+		order by gstore limit #{startIndex}, #{perPageSize}
+	</select>
+	<!-- 根据id查询一个商品 -->
+	<select id="selectGoodsById"  resultType="Goods" parameterType="Integer">
+		select gt.*,gd.*,gy.typename from goodstable gt,goodsdiscount gd,goodstype gy 
+		where gt.id=#{id} and gt.goodstype_tid = gy.tid and gd.goodstable_id=#{id} and gd.gdnow=1
+	</select>
+	<!-- 查询商品类型，添加或修改商品时使用 -->
+	<select id="selectGoodsType" resultType="GoodsType">
+		select * from goodstype
+	</select>
+	<!-- 添加商品 （主键回填）-->
+	<insert id="addGoods" parameterType="Goods" keyProperty="id" useGeneratedKeys="true">
+		insert into goodstable (gname,goprice,gunit,gstore,gpicture,goodstype_tid,gfocusnum) 
+		values (#{gname}, #{goprice}, #{gunit}, #{gstore}, #{gpicture}, #{goodstype_tid}, 0)
+	</insert>
+	<!-- 添加商品折扣 -->
+	<insert id="addGoodsDiscount">
+		insert into goodsdiscount (id,goodstable_id,gdprice,gdnow)
+		values (null,#{id},#{price},1)
+	</insert> 
+	<!-- 修改一个商品 -->
+	<update id="updateGoodsById" parameterType="Goods">
+    update goodstable
+    <set>
+      <if test="gname != null">
+        gname = #{gname},
+      </if>
+      <if test="goprice != null">
+        goprice = #{goprice},
+      </if>
+      <if test="gunit != null">
+        gunit = #{gunit},
+      </if>
+      <if test="gstore != null">
+        gstore = #{gstore},
+      </if>
+      <if test="gpicture != null">
+        gpicture = #{gpicture},
+      </if>
+      <if test="goodstype_tid != null">
+        goodstype_tid = #{goodstype_tid},
+      </if>
+    </set>
+    	where id = #{id}
+  </update>
+  <!-- 修改商品折扣状态 -->
+  <update id="updateGoodsDiscount" parameterType="Integer">
+  	update goodsdiscount set gdnow=0 where goodstable_id=#{id}
+  </update> 
+  <!-- 删除商品时先删除折扣表中相关数据 -->
+  <delete id="deleteGoodsDiscount" parameterType="Integer">
+  	delete from goodsdiscount where goodstable_id=#{id}
+  </delete>
+  <!-- 删除一个商品 -->
+  <delete id="deleteAGoods" parameterType="Integer">
+  	delete from goodstable where id=#{id}
+  </delete>
+  <!-- 删除商品时先删除折扣表中相关数据 -->
+  <delete id="deleteGoodsDiscount1" parameterType="List">
+  	delete from goodsdiscount where goodstable_id in
+  	<foreach item="item" index="index" collection="list"
+		open="(" separator="," close=")">
+			#{item}
+	</foreach>
+  </delete>
+  <!-- 删除多个商品 -->
+  <delete id="deleteGoods" parameterType="List">
+  	delete from goodstable where id in
+  	<foreach item="item" index="index" collection="list"
+		open="(" separator="," close=")">
+			#{item}
+	</foreach>
+  </delete>
+  <!-- 查询关联商品 -->
+  <select id="selectOrderdetailGoods" resultType="map" parameterType="Integer">
+  	select * from orderdetail where goodstable_id=#{id}
+  </select>
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.CartDao">
+	<!-- 关注商品 -->
+	<!--在bfocus后面添加一个 | 产品ID -->
+	<!-- 参数map, 分别是产品ID(gid)和用户ID(uid) -->
+	<update id="focus" parameterType="map">
+		UPDATE busertable
+		SET
+		bfocus=(SELECT CONCAT(busertable.bfocus,CONCAT(#{gid},"|")))
+		WHERE
+		busertable.id=#{uid};
+	</update>
+
+	<!-- 获取所有关注 -->
+	<select id="isFocus" parameterType="int" resultType="String">
+		SELECT
+		busertable.bfocus FROM busertable WHERE id=#{0}
+	</select>
+
+	<!--每次但有一个新的用户关注是, focusNum +=1 -->
+	<update id="focusNum" parameterType="int">
+		UPDATE goodstable
+		SET gfocusnum = gfocusnum + 1
+		WHERE id = #{id}
+	</update>
+	
+	<insert id="orderConfirm" parameterType="Order">
+		INSERT INTO
+		orderbasetable(busertable_id,amount,orderbasetable.status,orderdate,buseraddress_id,deletestatus)
+		VALUES(#{busertable_id},#{amount},0,NOW(),#{buseraddress_id},1);
+	</insert>
+
+	<insert id="orderDetail" parameterType="map">
+		INSERT INTO
+		orderdetail(orderbasetable_id,goodstable_id,orderprice,shoppingnum,ordercount)
+		VALUES(#{orderbasetable_id},#{goodstable_id},#{orderprice},#{shoppingnum},orderprice*shoppingnum);
+	</insert>
+
+</mapper>

@@ -1,0 +1,60 @@
+package com.controller.before;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.po.Buser;
+import com.service.before.CartService;
+import com.sun.org.apache.bcel.internal.generic.NEW;
+import com.util.MyUtil;
+
+@Controller
+public class CartController extends BaseBeforeController{
+	@Autowired
+	private CartService cartService;
+
+	// 閸忚櫕鏁為崯鍡楁惂 瀹歌尙绮＄�圭偟骞�
+	@RequestMapping("/cart/focus")
+	public String focus(Model model,Integer id, HttpSession session){
+		return cartService.focus(model, id, session);
+	}
+
+	// 濞ｈ濮炵拹顓犲⒖鏉烇拷  瀹歌尙绮＄�圭偟骞�
+	@RequestMapping("/cart/putCart")
+	public String putCart(HttpServletRequest request,HttpServletResponse response,Model model,Integer shoppingnum, Integer id,HttpSession session) {
+		return cartService.putCart(request, response,model,  shoppingnum,id,session);
+	}
+
+	//閺屻儴顕楃拹顓犲⒖鏉烇拷
+	@RequestMapping("/cart/selectCart")
+	public String selectCart(Model model, HttpSession session) {
+		return cartService.selectCart(model, session);
+	}
+	//閸掔娀娅庣拹顓犲⒖鏉烇缚鑵戞稉锟芥稉顏勬櫌閸濓拷
+	@RequestMapping("/cart/deleteAgoods")
+	public String deleteAgoods(Model model,Integer id,HttpSession session) {
+		return cartService.deleteAgoods(model,id, session);
+	}
+	//濞撳懐鈹栫拹顓犲⒖鏉烇拷
+	@RequestMapping("/cart/clear")
+	public String clear(HttpSession session) {
+		return cartService.clear(session);
+	}
+	//閸樿崵绮ㄧ粻锟�
+	@RequestMapping("/cart/orderConfirm")
+	public String orderConfirm(Model model, HttpSession session) {
+		return cartService.orderConfirm(model, session);
+	}
+	
+	//閺囧瓨鏁奸弫浼村櫤
+	@RequestMapping("/cart/changeNum")
+	public String changeNum(Model model,Integer id , Integer num, HttpSession session) {
+		return cartService.changeNum(model, id, num, session);
+	}
+	
+}

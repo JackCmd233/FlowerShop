@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.AdminOrderDao">
+	<select id="orderInfo"  resultType="map" >
+		select ot.id, bt.bphone, ot.amount, ot.status, ot.orderdate, ot.payway, ba.address, ot.deletestatus 
+		from orderbasetable ot, busertable bt,buseraddress ba 
+		where ot.busertable_id=bt.id and ot.busertable_id=ba.busertable_id
+	</select>
+	<!-- 分页查询订单 --> 
+	<select id="selectAllOrdersByPage" resultType="map" parameterType="map">
+		select ot.id, bt.bphone, ot.amount, ot.status, ot.orderdate, ot.payway, ba.address, ot.deletestatus 
+		from orderbasetable ot, busertable bt,buseraddress ba 
+		where ot.busertable_id=bt.id and ot.busertable_id=ba.busertable_id
+		order by ot.id
+		limit #{startIndex}, #{perPageSize}
+	<!-- 按查询条件查询订单 -->
+	</select>
+		<select id="selectOrdersByFactor" resultType="map" parameterType="map">
+		select ot.id, bt.bphone, ot.amount, ot.status, ot.orderdate, ot.payway, ba.address, ot.deletestatus 
+		from orderbasetable ot, busertable bt,buseraddress ba 
+		where ot.busertable_id=bt.id and ot.busertable_id=ba.busertable_id
+		<if test="status!=123456">
+		and ot.status=#{status}
+		</if>
+		<if test="payway!='123456'">
+		and ot.payway=#{payway}
+		</if>
+		<if test="starttime!=null">
+		and ot.orderdate&gt;=#{starttime}
+		</if>
+		<if test="endtime!=null">
+		and ot.orderdate&lt;=#{endtime}
+		</if>
+		order by ot.id
+		limit #{startIndex}, #{perPageSize}
+	</select>
+</mapper>

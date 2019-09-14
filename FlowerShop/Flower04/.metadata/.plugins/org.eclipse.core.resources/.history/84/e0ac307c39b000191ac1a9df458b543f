@@ -1,0 +1,81 @@
+package com.controller.before;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+<<<<<<< .mine
+import org.springframework.beans.factory.annotation.Autowired;
+=======
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+>>>>>>> .r434
+import org.springframework.stereotype.Controller;
+<<<<<<< .mine
+import org.springframework.ui.Model;
+=======
+import org.springframework.web.bind.annotation.RequestBody;
+>>>>>>> .r434
+import org.springframework.web.bind.annotation.RequestMapping;
+<<<<<<< .mine
+=======
+import org.springframework.web.bind.annotation.ResponseBody;
+>>>>>>> .r434
+
+<<<<<<< .mine
+import com.service.before.CartService;
+=======
+import com.alipay.api.AlipayApiException;
+import com.po.pojo.AlipayBean;
+import com.service.before.PayService;
+import com.util.AlipayConfig;
+>>>>>>> .r434
+
+@Controller
+<<<<<<< .mine
+public class PayController extends BaseBeforeController{
+	@Autowired
+	private CartService cartService;
+	
+	@Autowired
+	private PayService payService;
+	
+	/**
+	 * 跳转到支付页面
+	 */
+	@RequestMapping("/toPay")
+	public String toPay(Model model,HttpSession session,HttpServletRequest request,Integer id) {
+		System.out.println("这是地址ID: "+id);
+		return cartService.toPay(model, request, session, id);
+		//return "before/pay";
+	}
+	
+	@RequestMapping("/alipay")
+	public void alipay(HttpServletResponse response,String orderId,String amount) throws AlipayApiException{
+		AlipayBean alipayBean=new AlipayBean();
+		alipayBean.setOrderId(orderId);
+		alipayBean.setOrderName(orderId);
+		alipayBean.setAmount(amount); 
+		AlipayConfig alipayConfig=new AlipayConfig();
+		try {
+             response.setContentType("text/html; charset=utf-8");
+             response.getWriter().write(alipayConfig.pay(alipayBean));
+             response.getWriter().close();
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+>>>>>>> .r434
+	}
+<<<<<<< .mine
+}
+
+	
+	@RequestMapping("/changePay")
+	@ResponseBody
+	public AlipayBean changePay(@RequestBody AlipayBean alipayBean){
+		//String orderId=alipayBean.getOrderId();
+		//System.out.println("sa");
+		//return alipayBean;
+		return payService.updateOrder(alipayBean);
+	}
+}

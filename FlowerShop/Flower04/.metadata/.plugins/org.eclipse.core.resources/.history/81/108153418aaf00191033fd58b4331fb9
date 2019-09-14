@@ -1,0 +1,57 @@
+function addAddress() {
+	$.ajax({
+		// 几个参数需要注意一下
+		type : "POST",// 方法类型
+		url : "/Shop/addAddress",
+		data : $("#formAddress").serialize(),
+		success: function (data){
+			alert("添加成功");
+			window.location.reload();
+		},
+		error: function (){
+			alert("添加失败");
+			window.location.reload();
+		}
+	});
+}
+
+// 删除
+function deleteAaddress(aid) {
+	$.ajax({
+		// 几个参数需要注意一下
+		type : "get",// 方法类型
+		url : "/Shop/removeAddress?id=" + aid,
+		success: function (data){
+			alert("删除成功");
+			window.location.reload();
+			window.location.reload(true); 
+		},
+		error: function (){
+			alert("删除失败");
+			window.location.reload();
+			window.location.reload(true); 
+		}
+	});
+
+}
+
+// 修改 ,aReceiver,aPhone,aAddress
+function updateAaddress(aid) {
+	var formId= "updateAddress"+aid;
+	alert("这是将要修改的地址ID: "+ aid);
+	$.ajax({
+		// 几个参数需要注意一下
+		type : "POST",// 方法类型
+		url : "/Shop/updateAddress",
+		data : $("#"+formId).serialize(),
+		success: function (data){
+
+			window.location.reload();
+			window.location.reload(true); 
+		},
+		error: function (){
+			window.location.reload();
+			window.location.reload(true); 
+		}
+	});
+}

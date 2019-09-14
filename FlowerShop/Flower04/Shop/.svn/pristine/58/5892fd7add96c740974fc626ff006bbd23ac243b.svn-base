@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- com.dao.AdminTypeDao对应Dao接口 -->
+<mapper namespace="com.dao.AdminTypeDao">
+	<!-- 查询类型信息 -->
+	<select id="selectGoodsType"  resultType="GoodsType" >
+		select * from goodstype
+	</select>
+	<!-- 分页查询商品类型 -->
+	<select id="selectAllTypeByPage" resultType="GoodsType" parameterType="map">
+		select * from goodstype limit #{startIndex}, #{perPageSize}
+	</select>
+	<!-- 添加类型 -->
+	<insert id="addType" parameterType="GoodsType">
+		insert into goodstype (id,tid,typename,describ) values (null, #{tid},#{typename},#{describ})
+	</insert>
+	<!-- 删除与商品有关的折扣 -->
+	<delete id="deleteDiscount" parameterType="Integer">
+		delete from goodsdiscount where goodstable_id in (select id from goodstable where goodstype_tid=#{tid})
+	</delete>
+	<!-- 删除与类型有关的商品 --> 
+	<delete id="deleteGoods" parameterType="Integer">
+		delete from goodstable where goodstype_tid=#{tid}
+	</delete>
+	<!-- 删除类型 -->
+	<delete id="deleteType" parameterType="Integer">
+		delete from goodstype where tid = #{tid} 
+	</delete>
+</mapper>

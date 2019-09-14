@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.AdminUserDao">
+	<!-- 查询用户信息 -->
+	<select id="selectBuser"  resultType="Buser" >
+		select * from busertable 
+	</select>
+	<!-- 分页查询用户信息 -->
+	<select id="selectAllUserByPage" resultType="Buser">
+		select * from busertable limit #{startIndex},#{perPageSize}
+	</select>
+	<!-- 根据id查询用户信息 -->
+	<select id="selectBuserById" resultType="Buser">
+		select * from busertable where id=#{id}
+	</select>
+	<!-- 修改用户状态为限制登录 -->
+	<update id="updateuserManager"  parameterType="Integer" >
+		update busertable set bcanlogin=0 where id=#{id}
+	</update>
+	<!-- 修改用户状态为可登录 -->
+	<update id="updateuserManager1"  parameterType="Integer" >
+		update busertable set bcanlogin=1 where id=#{id}
+	</update>
+</mapper>

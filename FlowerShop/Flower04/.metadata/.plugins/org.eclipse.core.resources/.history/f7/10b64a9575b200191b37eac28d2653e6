@@ -1,0 +1,96 @@
+//添加地址
+function addAddress() {
+	var receiver = document.getElementById("receiverText").value;
+	// 去除两头的空格
+	receiver = receiver.replace(/^\s+|\s+$/g, "");
+	var receiverphone = document.getElementById("receiverphoneText").value;
+	// 电话需要去除所有空格
+	receiverphone = receiverphone.replace(/\s+/g, "");
+	var address = document.getElementById("addressText").value;
+	address = address.replace(/^\s+|\s+$/g, "");
+
+	var reg = /^1[3|4|5|7|8][0-9]{9}$/; // 验证规则
+	if (receiver == null || receiver == "" || receiverphone == null
+			|| receiverphone == "" || address == null || address == "") {
+		alert("输入有误,请重新输入");
+		window.location.reload();
+		window.location.reload(true);
+		return false;
+	}
+
+	if (!reg.test(receiverphone)) {
+		alert("输入有误,请重新输入");
+		window.location.reload();
+		window.location.reload(true);
+		return false;
+	}
+
+	$.ajax({
+		// 几个参数需要注意一下
+		type : "POST",// 方法类型
+		url : "/Shop/addAddress",
+		data : $("#formAddress").serialize(),
+		success : function(data) {
+			alert("添加成功");
+			window.location.reload();
+		},
+		error : function() {
+			alert("添加失败");
+			window.location.reload();
+		}
+	});
+}
+
+// 删除
+function deleteAaddress(aid) {
+	$.ajax({
+		// 几个参数需要注意一下
+		type : "get",// 方法类型
+		url : "/Shop/removeAddress?id=" + aid,
+		success : function(data) {
+			alert("删除成功");
+			window.location.reload();
+			window.location.reload(true);
+		},
+		error : function() {
+			alert("删除失败");
+			window.location.reload();
+			window.location.reload(true);
+		}
+	});
+
+}
+
+// 修改 ,aReceiver,aPhone,aAddress
+function updateAaddress(aid) {
+	var formId = "updateAddress" + aid;
+	var receiver = document.getElementById("shoujianren-" + aid).value;
+	// 去除两头的空格
+	receiver = receiver.replace(/^\s+|\s+$/g, "");
+
+	var receiverphone = document.getElementById("dianhua-" + aid).value;
+	// 电话需要去除所有空格
+	receiverphone = receiverphone.replace(/\s+/g, "");
+	var address = document.getElementById("dizhi-" + aid).value;
+	address = address.replace(/^\s+|\s+$/g, "");
+	// alert("收件人: " + receiver + " 收件人手机:" + receiverphone + " 地址:" + address);
+	var reg = /^1[3|4|5|7|8][0-9]{9}$/; // 验证规则
+	if (receiver == null || receiver == "" || receiverphone == null
+			|| receiverphone == "" || address == null || address == "") {
+		alert("输入有误,请重新输入");
+		window.location.reload();
+		window.location.reload(true);
+		return false;
+	}
+
+	if (!reg.test(receiverphone)) {
+		alert("输入有误,请重新输入");
+		window.location.reload();
+		window.location.reload(true);
+		return false;
+	}
+	alert("这是收货人: "+receiver + " 这是地址:"+address);
+	window.location.href = "/Shop/updateAddress?receiver="+receiver+"&receiverphone="+receiverphone+"&updateAddress="+address;
+	window.location.reload();
+	window.location.reload(true);
+}

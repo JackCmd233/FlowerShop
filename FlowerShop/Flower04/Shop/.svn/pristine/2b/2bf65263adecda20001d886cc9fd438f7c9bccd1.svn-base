@@ -1,0 +1,48 @@
+package com.controller.before;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alipay.api.AlipayApiException;
+import com.po.pojo.AlipayBean;
+import com.service.before.PayService;
+import com.util.AlipayConfig;
+
+@Controller
+@RequestMapping("/pay")
+public class PayController{
+	@Autowired
+	private PayService payService;
+	
+	@RequestMapping("/alipay")
+	public void alipay(HttpServletResponse response,String orderId,String amount) throws AlipayApiException{
+		AlipayBean alipayBean=new AlipayBean();
+		alipayBean.setOrderId(orderId);
+		alipayBean.setOrderName(orderId);
+		alipayBean.setAmount(amount); 
+		AlipayConfig alipayConfig=new AlipayConfig();
+		try {
+             response.setContentType("text/html; charset=utf-8");
+             response.getWriter().write(alipayConfig.pay(alipayBean));
+             response.getWriter().close();
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+	}
+	
+	@RequestMapping("/changePay")
+	@ResponseBody
+	public AlipayBean changePay(@RequestBody AlipayBean alipayBean){
+		//String orderId=alipayBean.getOrderId();
+		//System.out.println("sa");
+		//return alipayBean;
+		return payService.updateOrder(alipayBean);
+	}
+}

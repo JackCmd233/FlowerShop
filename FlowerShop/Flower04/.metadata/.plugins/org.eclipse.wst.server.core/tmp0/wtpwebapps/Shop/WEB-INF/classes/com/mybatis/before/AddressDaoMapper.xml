@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.AddressDao">
+	<!-- 添加地址 -->
+	<insert id="addAddress" parameterType="Address">
+		INSERT INTO
+		buseraddress(busertable_id,address,
+		receiver,receiverphone)
+		VALUES
+		(#{busertable_id},#{address},#{receiver},#{receiverphone});
+	</insert>
+
+	<!-- 删除地址, 实际上是更改地址的状态 -->
+	<update id="deleteAddress" parameterType="Integer">
+		UPDATE buseraddress SET
+		buseraddress.status=0 WHERE id=#{0};
+	</update>
+
+	<!-- 修改地址信息 -->
+	<update id="updateAddress" parameterType="Address">
+		UPDATE buseraddress
+		SET
+		receiver=#{receiver} , address=#{address},
+		receiverphone=#{receiverphone}
+		WHERE busertable_id=#{busertable_id} AND id=#{id} AND buseraddress.status=1;
+	</update>
+
+
+	<!--通过用户ID 查找所有可供使用的地址 -->
+	<select id="selectAllAddress" parameterType="Integer" resultType="Address">
+		SELECT * FROM buseraddress WHERE buseraddress.busertable_id
+		= #{0} AND buseraddress.status=1;
+	</select>
+
+	<!-- 通过用户ID 和 地址表的id 查找对应的地址,  这是为了订单而专门准备的,  不需要判断地址的状态 -->
+	<select id="selectAddress" parameterType="Address" resultType="Address">
+		SELECT * FROM
+		buseraddress WHERE buseraddress.busertable_id
+		= #{busertable_id} AND
+		buseraddress.id=#{id} ;
+	</select>
+
+	<!-- 获取行的数量, 为了在前端分页展示所用, 必须判断是否可用-->
+	<select id="getNum" parameterType="Integer" resultType="Integer">
+		SELECT
+		COUNT(*) FROM buseraddress WHERE buseraddress.busertable_id = #{0} AND buseraddress.status=1;
+	</select>
+
+</mapper>

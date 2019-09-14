@@ -1,0 +1,108 @@
+package com.controller.before;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+//import org.apache.tools.ant.types.CommandlineJava.SysProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
+//import org.springframework.web.bind.annotation.ModelAttribute;
+//import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.po.Buser;
+import com.service.before.UserService;
+
+//import com.util.sendsms;
+@Controller
+@RequestMapping("/user")
+public class UserController {
+	@Autowired
+	private UserService userService;
+
+	@RequestMapping("/log")
+	public String log() {
+		return "before/loginin";
+	}
+
+	@RequestMapping("/ind")
+	public String ind() {
+		return "redirect:/index2";
+	}
+
+	@RequestMapping("/regi")
+	public String regi() {
+		return "before/register";
+	}
+
+	@RequestMapping("/back")
+	public String back() {
+		return "before/backcode";
+	}
+
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½
+	@RequestMapping("/send")
+	@ResponseBody
+	public int sendcode(Model model, String phone, HttpSession session) {
+		Buser buser = new Buser();
+		buser.setBphone(phone);
+		return userService.sendcode(buser, model, session);
+	}
+
+	// ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½
+	@RequestMapping("/backcode")
+	@ResponseBody
+	public String backcode(Model model, String password, String phone, HttpSession session) {
+		Buser buser = new Buser();
+		buser.setBphone(phone);
+		buser.setBpwd(password);
+		return userService.backcode(buser, model, session);
+	}
+
+	// ×¢ï¿½ï¿½
+	@RequestMapping("/register")
+	@ResponseBody
+	public String register(String phone, String password, Model model, HttpSession session) {
+		Buser buser = new Buser();
+		buser.setBphone(phone);
+		buser.setBpwd(password);
+		return userService.register(buser, model, session);
+	}
+
+	// ï¿½ï¿½Ñ¯ï¿½Ö»ï¿½ï¿½ï¿½
+	@RequestMapping("/selectuser")
+	@ResponseBody
+	public String selectuser(String phone, Model model, HttpSession session) {
+		Buser buser = new Buser();
+		buser.setBphone(phone);
+		return userService.selectuser(buser, model, session);
+	}
+
+	// ï¿½ï¿½Â¼
+	@RequestMapping("/loginin")
+	@ResponseBody
+	public String loginin(String username, String password, Model model, HttpSession session,
+			HttpServletRequest request, HttpServletResponse response) {
+		Buser buser = new Buser();
+		buser.setBphone(username);
+		buser.setBpwd(password);
+		String result= userService.loginin(buser, model, session);	
+		Cookie cookie = new Cookie("JSESSIONID", session.getId());
+		cookie.setMaxAge(24*60*60); // ¿Í»§¶ËµÄJSESSIONID±£´æÁ½·ÖÖÓ
+		cookie.setPath("/");
+		response.addCookie(cookie);
+		return result;
+	}
+
+	// ï¿½Ë³ï¿½
+	@RequestMapping("/exit")
+	public String exit(HttpSession session) {
+		session.invalidate();
+		return "redirect:http://localhost:8080/Shop/index2";
+	}
+}

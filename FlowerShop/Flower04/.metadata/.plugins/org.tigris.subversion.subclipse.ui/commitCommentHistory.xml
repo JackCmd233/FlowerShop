@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CommitComments>	<CommitComment>登录session关闭游览器不失效</CommitComment>
+	<CommitComment>修改bug</CommitComment>
+	<CommitComment>session 失效</CommitComment>
+	<CommitComment>修改BUG</CommitComment>
+	<CommitComment>修改BUG: 在购物车没有商品时 ,也能提交订单</CommitComment>
+	<CommitComment>重写地址修改模块</CommitComment>
+	<CommitComment>重写修改地址模块</CommitComment>
+	<CommitComment>字符乱码</CommitComment>
+	<CommitComment>JDBC连接 后面加 utf-8</CommitComment>
+	<CommitComment>购物车商品数量减少</CommitComment>
+</CommitComments>

@@ -1,0 +1,36 @@
+function addAddress() {
+	alert("开始执行Ajax");
+	$.ajax({
+		// 几个参数需要注意一下
+		type : "POST",// 方法类型
+		url : "<%=basePath%>addAddress",// url
+		data : $('#formAddress').serialize()
+	});
+}
+// 删除
+function deleteAaddress(aid) {
+	$.ajax({
+		// 几个参数需要注意一下
+		type : "get",// 方法类型
+		url : "<%=basePath%>removeAddress?id=" + aid
+	});
+}
+// 修改
+function updateAaddress(aid) {
+	$.ajax({
+		// 几个参数需要注意一下
+		type : "get",// 方法类型
+		url : "<%=basePath%>updateAddress?id=" + aid
+	});
+}
+function showAllAddress() {
+	$.ajax({
+		// 几个参数需要注意一下
+		type : "get",// 方法类型
+		url : "<%=basePath%>selectAllAddress",
+		success : function(data) {
+			// showAddress
+			$("#showAddress").load();
+		}
+	});
+}

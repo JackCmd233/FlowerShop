@@ -1,0 +1,122 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<base href="<%=basePath%>">
+<title>商品详情</title>
+<link href="css/before/daohang.css" rel="stylesheet" type="text/css" />
+<link href="css/before/common.css" rel="stylesheet" type="text/css" />
+<link href="css/before/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+	function goCart() {
+		var num= document.getElementById("num").value;
+		var r = /^\+?[1-9][0-9]*$/;
+		if (r.test(num)){
+			//这是一个正整数
+			if(${goods.gstore } >= num ){
+				document.putcartform.submit();			
+			}else{
+				alert("请重新输入");
+			}			
+		}else{
+			alert("请重新输入");
+		}
+	}
+	function gofocus(gno) {
+		window.location.href = "/Shop/cart/focus?id=" + gno;
+	}
+</script>
+</head>
+<body>
+	<!-- 用户尚的用户下拉框 -->
+	<ul class="user-box active">
+		<li>
+			<c:if test="${bruser!=null}">${bruser.bphone }</c:if>
+			<c:if test="${bruser==null}"><a href="<%=basePath %>toLogin"><img src="<%=basePath %>images/before/login.png" width="20px" height="20px;"><span class="user-box-name">登录</span></a></c:if>
+		</li>
+		<li>
+		<c:if test="${bruser!=null}"><a href="<%=basePath %>user/exit">退出</a></c:if>
+		<c:if test="${bruser==null}"><a href="<%=basePath %>toRegister"><img src="<%=basePath %>images/before/register.png" width="25px" height="25px;"><span class="user-box-name">注册</span></a>
+		</c:if>
+		</li>
+		<li>
+		<c:if test="${bruser!=null}"><a href="<%=basePath %>useC">用户中心</a></c:if>
+		<c:if test="${bruser==null}"><a href="<%=basePath %>useC"><img src="<%=basePath %>images/before/usercontent.png" width="20px" height="20px;"><span class="user-box-name">用户中心</span></a>
+		</c:if>
+		
+		</li>
+	</ul>
+
+	<!-- 头部 -->
+	<div class="head">
+		<img class="logo" src="<%=basePath %>images/before/mylogo.png">
+		<div class="head-title">
+			<a href="<%=basePath %>index2"><span>首页</span></a>
+			<a href="<%=basePath %>search2/1"><span>所有花</span></a>
+		</div>
+		<div class="row">
+			<div class="col-lg-3">
+			    <div class="input-group" id="btn">
+			    <input type="hidden" id="url" value="<%=basePath %>"/>
+			      <input type="text" class="form-control" id="btn-content" placeholder="请输入您要查询的内容（花的名称或类型）">
+			      <span class="input-group-btn">
+			        <button class="btn btn-default" id="btn1" style="top: 0px;" type="button"><span>搜索</span></button>
+			      </span>
+			    </div>
+			 </div>
+		</div>
+		<!-- 购物车 -->
+		<a href="<%=basePath %>cart/selectCart"><img class="cart" src="<%=basePath %>images/before/cart.png" width="50px" height="50px"></a>
+		<!-- 用户图标 -->
+		<a href="javascript:;"><img src="<%=basePath %>images/before/user.png" class="user" ></a>
+	</div>
+
+	<form action="cart/putCart" name="putcartform" method="post">
+		<div class="blank"></div>
+		<div class="block clearfix">
+			<div class="location ared">
+				当前位置：<a href="index2">首页</a> > <a href="goodsDetail?id=${goods.id }">商品详情</a>
+			</div>
+			<div class="blank"></div>
+			<div id="goodsInfo">
+				<div class="imgInfo">
+					<input type="hidden" name="id" value="${goods.id }" /> <img
+						src="logos/${goods.gpicture}" width="230px" height="230px" />
+				</div>
+			</div>
+			<!--商品表述-->
+			<div class="goods_desc">
+				<div class="bt">${goods.gname }</div>
+				<div class="goods_show">
+					<ul>
+						<li><span>价格:</span> <strong class="yj">${goods.goprice }元</strong></li>
+						<c:if test="${goods.gdprice!=null }">
+							<li><span>折扣价:</span><strong class="xj">${goods.gdprice }元</strong></li>
+						</c:if>
+
+						<li><span>类型:</span> ${goods.typename }</li>
+						<li><span>购买数量:</span><input type="text" id="num"
+							name="shoppingnum" class="good_txt" value="1" required />
+							(库存${goods.gstore }件)</li>
+					</ul>
+				</div>
+				<p class="bottom10 top5">
+					<img src="images/before/goods_ann2.gif" style="cursor: pointer"
+						onclick="goCart()" />&nbsp;&nbsp; <input type="button"
+						style="cursor: pointer" class="sh_bnt2"
+						onclick="gofocus('${goods.id }')" value="关注" />
+				</p>${msg}
+			</div>
+			<!--end-->
+		</div>
+	</form>
+</body>
+</html>

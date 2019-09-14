@@ -1,0 +1,57 @@
+package com.controller.before;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.dao.AddressDao;
+import com.po.Address;
+import com.service.before.AddressService;
+import com.service.before.CartService;
+import com.util.MyUtil;
+
+@Controller
+public class AddressControl extends BaseBeforeController {
+	@Autowired
+	private AddressService addressService;
+
+	@RequestMapping("/addAddress")
+	@ResponseBody
+	public String addAddress(Model model, HttpServletRequest request, HttpSession session, Address address) {
+		System.out.println("这是添加地址的control");
+		return addressService.addAddress(model, request, session, address);
+	}
+
+	@RequestMapping("/removeAddress")
+	@ResponseBody
+	public String removeAddress(Model model, HttpServletRequest request, HttpSession session, Integer id) {
+		System.out.println("这是将要删除的地址id: " + id);
+		return addressService.deleteAddress(model, request, session, id);
+	}
+
+	@RequestMapping("/selectAllAddress")
+	public String selectAllAddress(Model model, HttpServletRequest request, HttpSession session) {
+		System.out.println("这是用户session" + MyUtil.getUserId(session));
+		return addressService.selectAllAddress(model, session);
+	}
+
+	@RequestMapping("/updateAddress")
+	@ResponseBody
+	public String updateAddress(Model model, HttpServletRequest request, HttpSession session) {
+		Address address = new Address();
+		address.setReceiver(request.getParameter("receiver"));
+		address.setReceiverphone(request.getParameter("receiverphone"));
+		address.setAddress(request.getParameter("updateAddress"));
+		System.out.println("这是将要更新的地址ID: " + address.getId());
+		System.out.println("将要写入数据库的地址: " + address.getAddress());
+
+		System.out.println("将要写入数据库的收货人姓名: " + address.getReceiver());
+
+		return addressService.updateAddress(model, request, session, address);
+	}
+}

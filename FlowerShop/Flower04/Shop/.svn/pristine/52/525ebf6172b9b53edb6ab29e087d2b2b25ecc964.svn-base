@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.IndexDao">
+	<!-- 查询销售排行 -->
+	<select id="getSaleOrder"  resultType="map">
+		select a.* ,gs.gdprice grprice from (select sum(od.SHOPPINGNUM) shopnumber,
+				gd.id id, 
+				gd.GNAME gname, 
+				gd.GOPRICE goprice, 
+				gd.GPICTURE  gpicture
+		from GOODSTABLE gd   LEFT JOIN ORDERDETAIL  od  ON od.goodstable_id=gd.id
+				 group by 
+				 gd.id, 
+				 gd.GNAME, 
+				 gd.GOPRICE, 
+				 gd.GPICTURE 
+		order by shopnumber desc limit 8) a left join goodsdiscount gs on gs.goodstable_id = a.id and gs.gdnow = 1
+	</select>
+		<select id="gethotpages"  resultType="Integer">
+		select count(*) from (select sum(od.SHOPPINGNUM) shopnumber,
+				gd.id id, 
+				gd.GNAME gname, 
+				gd.GOPRICE goprice, 
+				gd.GPICTURE  gpicture
+		from GOODSTABLE gd   LEFT JOIN ORDERDETAIL  od  ON od.goodstable_id=gd.id 
+				 group by 
+				 gd.id, 
+				 gd.GNAME, 
+				 gd.GOPRICE, 
+				 gd.GPICTURE 
+		order by shopnumber desc) a left join goodsdiscount gs on gs.goodstable_id = a.id and gs.gdnow = 1
+	</select>
+	<!-- 人气排行 -->
+	<select id="getFocusOrder" resultType="map">
+		select gs.*,gd.gdprice grprice from goodstable gs left join goodsdiscount gd on gs.id=gd.goodstable_id  order by gfocusnum desc limit 8
+	</select>
+	<select id="getfollowpage" resultType="Integer">
+		select count(*) from goodstable gs left join goodsdiscount gd on gs.id=gd.goodstable_id  order by gfocusnum desc
+	</select>
+	<!-- 根据id查询一个商品 -->
+	<select id="selectGoodsById" resultType="Goods"
+		parameterType="Integer">
+		select goodstable.*,goodstype.typename ,goodsdiscount.gdprice
+		,goodsdiscount.gdnow
+		from goodstable
+		LEFT JOIN goodstype
+		ON goodstable.goodstype_tid = goodstype.tid
+		LEFT JOIN goodsdiscount
+		ON goodsdiscount.goodstable_id = goodstable.id
+		where goodstable.id=#{0}
+	</select>
+	<!-- 公告 -->
+	<select id="selectNotice" resultType="Notice">
+		select * from noticetable order by ntime desc
+	</select>
+	<select id="selectNoticeByid" resultType="Notice" parameterType="Integer" >
+		select * from noticetable where id= #{id}
+	</select>
+	<!-- 首页搜索（输入花的名称或类型） -->
+	<select id="search" resultType="map" parameterType="String">
+		select a.*,gd.gdprice grprice from (select gt.*, gy.typename  from GOODSTABLE gt  ,GOODSTYPE gy where gt.goodstype_tid = gy.tid 
+		and (gt.gname like concat('%',#{mykey},'%') or gy.typename like concat('%',#{mykey},'%')) ) a left join goodsdiscount gd on gd.goodstable_id = a.id and gd.gdnow = 1
+	</select>
+	<!-- 获取所有的花的种类信息 -->
+	<select id="getGoodTypes" resultType="GoodsType">
+		select * from  goodstype 
+	</select>
+	<!-- 根据id值获取相应的花种类的花信息-->
+	<select id="getGoodsById" resultType="Goods" parameterType="Integer">
+		select * from  goodstable  where goodstype_id = #{ goodstype_id }
+	</select>
+	<!-- 获取所有的花的信息-->
+	<select id="getGoods" resultType="map" parameterType="map">
+		select gs.* , gd.gdprice grprice from  goodstable gs left join  goodsdiscount gd on gd.goodstable_id = gs.id and gd.gdnow = 1 limit #{firstIndex},#{endIndex}
+	</select>
+	<select id="getGoodpage" resultType="Integer" >
+		select count(*) from  goodstable gs left join  goodsdiscount gd on gd.goodstable_id = gs.id and gd.gdnow = 1
+	</select>
+	<!-- 根据热销商品的所有数据-->
+	<select id="getInfoByhot"  resultType="map" parameterType="map">
+		select a.* ,gs.gdprice grprice from (select sum(od.SHOPPINGNUM) shopnumber,
+				gd.id id, 
+				gd.GNAME gname, 
+				gd.GOPRICE goprice, 
+				gd.GPICTURE  gpicture
+		from GOODSTABLE gd   LEFT JOIN ORDERDETAIL  od  ON od.goodstable_id=gd.id
+				 group by 
+				 gd.id, 
+				 gd.GNAME, 
+				 gd.GOPRICE, 
+				 gd.GPICTURE 
+		order by shopnumber desc limit #{firstIndex},#{endIndex}) a left join goodsdiscount gs on gs.goodstable_id = a.id and gs.gdnow = 1
+	</select>
+	
+	<!-- 根据人气排行获取所有的数据 -->
+	<select id="getInfoBypopularity" resultType="map" parameterType="map">
+		select gs.*,gd.gdprice grprice from goodstable gs left join goodsdiscount gd  on gs.id=gd.goodstable_id and gd.gdnow = 1 order by gfocusnum desc limit #{firstIndex},#{endIndex}
+	</select>
+	<!-- 根据价格来查询相关数据-->
+	<select id="selectInfoBysale" resultType="Goods" parameterType="map">
+		select * from goodstable where grprice &gt;= #{ start } and grprice &lt;= #{ end }
+	</select>
+	<!-- 根据价格排序-->
+	<select id="selectInfoBysale2" resultType="Goods" >
+		select * from goodstable order by  grprice 
+	</select>
+	<!-- 将所有的数据显示-->
+	<select id="selectInfo" resultType="map" parameterType="map">
+		 select  gs.*,gd.gdprice grprice from goodstable gs ,goodsdiscount gd  where gs.id = gd.goodstable_id and gd.gdnow = 1
+			<if test="search_type != null">
+				and  gs.goodstype_tid = #{search_type}
+			</if>
+			<if test=" start != null">
+				and gd.gdprice &gt; #{start}
+			</if>
+			<if test=" end != null">
+				and gd.gdprice &lt; #{end}
+			</if>
+			<if test=" search_method == 'price'">
+				order by gd.gdprice 
+			</if>
+			limit #{firstIndex},#{endIndex}
+	</select>
+	<select id="selectInfopage" resultType="Integer" parameterType="map">
+		 select  count(*) from goodstable gs ,goodsdiscount gd  where gs.id = gd.goodstable_id and gd.gdnow = 1
+			<if test="search_type != null">
+				and  gs.goodstype_tid = #{search_type}
+			</if>
+			<if test=" start != null">
+				and gd.gdprice &gt; #{start}
+			</if>
+			<if test=" end != null">
+				and gd.gdprice &lt; #{end}
+			</if>
+			<if test=" search_method == 'price'">
+				order by gd.gdprice 
+			</if>
+	</select>
+	
+	<select id="selectInfosale"  resultType="map" parameterType="map">
+			select a.* ,gs.gdprice grprice from (select sum(od.SHOPPINGNUM) shopnumber,
+				gd.*
+		from GOODSTABLE gd   LEFT JOIN ORDERDETAIL  od  ON od.goodstable_id=gd.id
+				 group by 
+				 gd.id, 
+				 gd.GNAME, 
+				 gd.GOPRICE, 
+				 gd.GPICTURE 
+		order by shopnumber desc ) a left join goodsdiscount gs on gs.goodstable_id = a.id and gs.gdnow = 1 where 1=1 
+			<if test="search_type != null">
+				and  a.goodstype_tid = #{search_type}
+			</if>
+			<if test=" start != null">
+				and gs.gdprice &gt; #{start}
+			</if>
+			<if test=" end != null">
+				and gs.gdprice &lt; #{end}
+			</if>
+			limit #{firstIndex},#{endIndex}
+	</select>
+	
+	<select id="selectInfosalepage"  resultType="Integer" parameterType="map">
+			select count(*) from (select sum(od.SHOPPINGNUM) shopnumber,
+				gd.*
+		from GOODSTABLE gd   LEFT JOIN ORDERDETAIL  od  ON od.goodstable_id=gd.id
+				 group by 
+				 gd.id, 
+				 gd.GNAME, 
+				 gd.GOPRICE, 
+				 gd.GPICTURE 
+		order by shopnumber desc ) a left join goodsdiscount gs on gs.goodstable_id = a.id and gs.gdnow = 1 where 1=1 
+			<if test="search_type != null">
+				and  a.goodstype_tid = #{search_type}
+			</if>
+			<if test=" start != null">
+				and gs.gdprice &gt; #{start}
+			</if>
+			<if test=" end != null">
+				and gs.gdprice &lt; #{end}
+			</if>
+			
+	</select>
+	<!-- 获取用户的相关地址-->
+	<select id="getAddress"  resultType="map" parameterType="Integer">
+			select * from buseraddress where busertable_id = #{userId} and status = 1
+	</select>
+	<!--根据订单id值获取订单下的商品详情-->
+	<select id="selectOrderDetail"  resultType="map" parameterType="Integer">
+			select od.* ,gs.* from orderdetail od,goodstable gs where od.goodstable_id = gs.id  and  od.orderbasetable_id = #{orderId}
+	</select>
+	<!--根据订单id值获取订单下的地址-->
+	<select id="selectAddressOrderDetail"  resultType="map" parameterType="Integer">
+			select ob.* ,ba.*from orderbasetable ob,buseraddress ba where ba.id = ob.buseraddress_id and  ba.status = 1 and ob.id = #{orderId};
+	</select>
+</mapper>

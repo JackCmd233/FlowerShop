@@ -1,0 +1,33 @@
+package com.service.admin;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import com.dao.AdminUserDao;
+import com.po.Buser;
+@Service("adminUserService")
+@Transactional
+public class AdminUserServiceImpl implements AdminUserService{
+	@Autowired
+	private AdminUserDao adminUserDao;
+	@Override
+	public String userInfo(Model model) {
+		model.addAttribute("userList", adminUserDao.selectBuser());
+		return "admin/userManager";
+	}
+	//改变用户的账号的状态
+	@Override
+	public String updateuserManager(Integer id, Model model) {
+		Buser buser=adminUserDao.selectBuserById(id);
+		System.out.println(buser.getBcanlogin());
+		if(buser.getBcanlogin()==1) {//将用户可登录状态改为限制登录
+			adminUserDao.updateuserManager(id);
+			model.addAttribute("msg", "用户账号状态修改成功！");
+		}else {
+			adminUserDao.updateuserManager1(id);
+			model.addAttribute("msg", "用户账号状态修改成功！");
+		}
+		return "forward:/adminUser/userInfo";
+	}
+}

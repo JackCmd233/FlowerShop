@@ -1,0 +1,34 @@
+function addAddress() {
+	$.ajax({
+		// 几个参数需要注意一下
+		type : "POST",// 方法类型
+		url : "/Shop/addAddress",
+		data : $("#formAddress").serialize()
+	});
+	alert("添加成功");
+	window.location.reload()
+}
+// 删除
+function deleteAaddress(aid) {
+	$.ajax({
+		// 几个参数需要注意一下
+		type : "get",// 方法类型
+		url : "/Shop/removeAddress?id=" + aid
+	});
+	alert("删除成功");
+	window.location.reload()
+}
+// 修改 ,aReceiver,aPhone,aAddress
+function updateAaddress(aid) {
+	alert("修改操作");
+	//var newReceiver =  prompt("请输入收货人名字",aReceiver);
+	//alert("开始执行更新操作");
+	$.ajax({
+		// 几个参数需要注意一下
+		type : "POST",// 方法类型
+		url : "/Shop/updateAddress",
+		data : "address="+$("#updateAddressInfo").serialize()+"&id="+aid
+		//data:"studentId="+stuId+"&subjectId="+subId,
+	});
+	location.reload();
+}

@@ -1,0 +1,22 @@
+package com.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+import com.po.Goods;
+import com.po.GoodsType;
+@Repository("adminTypeDao")
+@Mapper
+public interface AdminTypeDao {
+	/**
+	 * 接口方法对应SQL映射文件AdminTypeMapper.xml中的id
+	 */
+	public List<GoodsType> selectGoodsType();//查询类型信息
+	public int addType(GoodsType goodsType);//添加类型
+	public int deleteType(Integer id);//删除类型
+	public List<Goods> selectGoodsByType(Integer id);//通过类型id查询商品信息
+	public Long getTotal(); //获取行数
+	public List<GoodsType> selectGoodsForBage(Map<String, Integer>map) ; //根据分页要求, 对数据库进行分页查询
+}

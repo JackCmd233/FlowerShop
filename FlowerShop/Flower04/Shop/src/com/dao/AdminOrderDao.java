@@ -1,0 +1,18 @@
+package com.dao;
+
+import java.util.List;
+import java.util.Map;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+
+@Repository("adminOrderDao")
+@Mapper
+public interface AdminOrderDao {
+	/**
+	 * 接口方法对应SQL映射文件AdminOrderMapper.xml中的id
+	 */
+	public List<Map<String,Object>> orderInfo();
+	public List<Map<String,Object>> selectAllOrdersByPage(Map<String, Object> map);
+	public List<Map<String,Object>> selectOrdersByFactor(Map<String, Object> map);
+	public List<Map<String,Object>> selectOrdersByFactorNum(Map<String, Object> map);
+}

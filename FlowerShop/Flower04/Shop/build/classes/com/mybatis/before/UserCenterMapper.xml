@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.UserCenterDao">
+	<!-- 查询我的关注 -->
+	<select id="myFocus" resultType="String" parameterType="Integer">
+		select bfocus from busertable where id=#{id}
+	</select>
+	<!-- 查询我的关注的商品信息 -->
+	<select id="myFocusMessage" resultType="map" parameterType="Integer">
+		select gt.id,gt.gname,gt.goprice,gt.gpicture,gd.gdprice from goodstable gt,goodsdiscount gd where gt.id=#{id} and goodstable_id=#{id} and gdnow=1
+	</select>
+	<!-- 删除我的关注，因为是拼接字符，直接更新关注 -->
+	<update id="deleteFocus" parameterType="map">
+	 	update busertable set bfocus=#{focus} where id=#{id}
+	</update>
+	<!-- 查询密码 -->
+	<select id="selectPassword" resultType="String" parameterType="Integer">
+		select bpwd from busertable where id=#{id}
+	</select>
+	<!-- 修改用户密码 --> 
+	<update id="updateUserPassword">
+		update busertable set bpwd=#{newpassword} where id=#{id} and bpwd=#{oldpassword}
+	</update>
+	<!-- 查询所有已支付订单信息 -->
+	<select id="showPayOrder" resultType="Order" parameterType="Integer">
+		select * from orderbasetable where status=1 and deletestatus=1 and busertable_id=#{id} order by orderdate desc
+	</select>
+	<!-- 分页查询已支付订单信息 -->
+	<select id="showPayOrderByPage" resultType="Order" parameterType="map">
+		select * from orderbasetable where status=1 and deletestatus=1 and busertable_id=#{id} order by orderdate desc limit #{startIndex}, #{perPageSize}
+	</select>
+	<!-- 查询所有未支付订单信息 -->
+	<select id="showNoPayOrder" resultType="Order" parameterType="Integer">
+		select * from orderbasetable where status=0 and deletestatus=1 and busertable_id=#{id} order by orderdate desc
+	</select>
+	<!-- 分页查询未支付订单 -->
+	<select id="showNoPayOrderByPage" resultType="Order" parameterType="map">
+		select * from orderbasetable where status=0 and deletestatus=1 and busertable_id=#{id} order by orderdate desc limit #{startIndex}, #{perPageSize}
+	</select>
+	<!-- 删除订单，只是在数据库改变了状态 -->
+	<update id="deleteOrders" parameterType="Integer">
+	 	update orderbasetable set deletestatus=0 where id=#{id}
+	</update>
+	<!-- 删除关注时，此商品的关注数减1 -->
+	<update id="deleteFocusNum" parameterType="Integer">
+	 	update goodstable set gfocusnum=gfocusnum-1 where id=#{id}
+	</update>
+	<!-- 删除订单时,查询该订单的商品和购买数量 -->
+	<select id="selectGoods" parameterType="Integer" resultType="map">
+		select goodstable_id,shoppingnum from orderdetail where orderbasetable_id=#{id}
+	</select>	
+	<!-- 释放库存 -->
+	<update id="changeGstore" parameterType="map">
+		update goodstable set gstore=gstore+#{shoppingnum} where id=#{goodstable_id}
+	</update>
+</mapper>
