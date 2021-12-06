@@ -51,7 +51,7 @@ public class CartController extends BaseBeforeController{
 		return cartService.orderConfirm(model, session);
 	}
 	
-	//闁哄洤鐡ㄩ弫濂稿极娴兼潙娅�
+	//修改数量
 	@RequestMapping("/cart/changeNum")
 	public String changeNum(Model model,Integer id , Integer num, HttpSession session) {
 		return cartService.changeNum(model, id, num, session);
