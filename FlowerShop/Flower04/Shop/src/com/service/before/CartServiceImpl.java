@@ -376,13 +376,13 @@ public class CartServiceImpl implements CartService {
 			idInteger = Integer.parseInt(iterator.next());
 			tempGoods = getGoodsById(idInteger);
 			System.out.println("这是keyID: " + idInteger.toString());
-			map.put(idInteger.toString(), tempGoods);
+			//map.put(idInteger.toString(), tempGoods);
 		}
 
-		for (Object value : map.values()) {
-			Goods goods = (Goods) value;
-			System.out.println("Value = " + goods.getGname());
-		}
+//		for (Object value : map.values()) {
+//			Goods goods = (Goods) value;
+//			System.out.println("Value = " + goods.getGname());
+//		}
 
 		return map;
 	}
