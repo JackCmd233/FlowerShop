@@ -52,7 +52,6 @@ public class UserCenterServiceImpl implements UserCenterService{
 				pageCur = 1;//当前页
 			}
 			if ((pageCur - 1) * 6 > totalCount) {
-				System.out.println("起始位置比商品总数还多了");
 				pageCur = pageCur - 1;
 			}
 			int startIndex=(pageCur - 1) * 6;////起始位置，起始索引0
@@ -68,9 +67,6 @@ public class UserCenterServiceImpl implements UserCenterService{
 				Integer goodId=Integer.parseInt(str[i]);
 				focuslist.add(userCenterDao.myFocusMessage(goodId));
 			}
-			//System.out.println(focuslist);
-//			System.out.println("我的页数"+pageCur);
-//			System.out.println("我的总页数"+totalPage);
 			model.addAttribute("pageCur", pageCur);
 			model.addAttribute("totalPage", totalPage);
 			model.addAttribute("focuslist", focuslist);
