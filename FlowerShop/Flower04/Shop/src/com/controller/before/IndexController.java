@@ -23,11 +23,11 @@ public class IndexController {
 	@Autowired
 	private PayDao paydao; 
 	
-	@RequestMapping("/toRegister")//鏉╂柨娲栧▔銊ュ斀閻ㄥ嫰銆夐棃锟�
+	@RequestMapping("/toRegister")//去注册
 	public String toRegister(Model model) {
 		return indexService.toRegister(model);
 	}
-	@RequestMapping("/toLogin")//鏉╂柨娲栭惂璇茬秿閻ㄥ嫰銆夐棃锟�
+	@RequestMapping("/toLogin")//去登录
 	public String toLogin(Model model) {
 		return indexService.toLogin(model);
 	}
